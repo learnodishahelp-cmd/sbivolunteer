@@ -1,1093 +1,237 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>SBI Volunteers - Registration Dashboard</title>
-    <style>
-        /* Reset & Base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<title>Registration Dashboard</title>
+
+<style>
+body{
+    font-family: Arial;
+    margin:20px;
+}
+
+button{
+    padding:10px 20px;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:8px;
+}
+
+th{
+    background:#eee;
+}
+
+#status{
+    margin-top:15px;
+}
+</style>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
-            color: white;
-            padding: 25px 30px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-left .logo {
-            font-size: 35px;
-        }
-
-        .header-left h1 {
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .header-left .subtitle {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-top: 3px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .stats {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
-        .stats span {
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        /* Controls */
-        .controls {
-            background: white;
-            padding: 20px 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .controls-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .controls-left input,
-        .controls-left select {
-            padding: 10px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            min-width: 200px;
-            transition: all 0.3s ease;
-        }
-
-        .controls-left input:focus,
-        .controls-left select:focus {
-            outline: none;
-            border-color: #1a237e;
-            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
-        }
-
-        .btn {
-            padding: 10px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(26, 35, 126, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-success {
-            background: #2e7d32;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #1b5e20;
-        }
-
-        .btn-danger {
-            background: #c62828;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #b71c1c;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #1a237e;
-            border: 2px solid #1a237e;
-        }
-
-        .btn-outline:hover {
-            background: #1a237e;
-            color: white;
-        }
-
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 12px;
-        }
-
-        /* Status Message */
-        .status-message {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .status-message.success {
-            display: block;
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 2px solid #4caf50;
-        }
-
-        .status-message.error {
-            display: block;
-            background: #fce4ec;
-            color: #c62828;
-            border: 2px solid #e53935;
-        }
-
-        .status-message.loading {
-            display: block;
-            background: #e3f2fd;
-            color: #1565c0;
-            border: 2px solid #2196f3;
-        }
-
-        .status-message.info {
-            display: block;
-            background: #fff3e0;
-            color: #e65100;
-            border: 2px solid #ff9800;
-        }
-
-        /* Table */
-        .table-wrapper {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .table-scroll {
-            overflow-x: auto;
-            padding: 0 0 0 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            min-width: 800px;
-        }
-
-        thead {
-            background: #f8f9fa;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        thead th {
-            padding: 14px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: #333;
-            white-space: nowrap;
-            position: sticky;
-            top: 0;
-            background: #f8f9fa;
-            z-index: 10;
-        }
-
-        thead th .sort-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            color: #333;
-            padding: 0;
-            font-size: 13px;
-        }
-
-        thead th .sort-btn:hover {
-            color: #1a237e;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s ease;
-        }
-
-        tbody tr:hover {
-            background: #f8f9fa;
-        }
-
-        tbody td {
-            padding: 12px 16px;
-            vertical-align: middle;
-            color: #444;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-badge.confirmed {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-badge.pending {
-            background: #fff3e0;
-            color: #e65100;
-        }
-
-        .status-badge.cancelled {
-            background: #fce4ec;
-            color: #c62828;
-        }
-
-        .vehicle-badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .vehicle-badge.yes {
-            background: #e3f2fd;
-            color: #0d47a1;
-        }
-
-        .vehicle-badge.no {
-            background: #f5f5f5;
-            color: #666;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-
-        .empty-state .icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        .empty-state h3 {
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        /* Table Footer */
-        .table-footer {
-            padding: 15px 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .table-footer .count {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .table-footer .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        /* Debug Panel */
-        #debugPanel {
-            background: #263238;
-            color: #e0e0e0;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            display: none;
-        }
-
-        #debugPanel h4 {
-            color: #80cbc4;
-            margin: 0 0 10px 0;
-        }
-
-        #debugOutput {
-            background: #1a1a1a;
-            color: #4fc3f7;
-            padding: 10px;
-            border-radius: 4px;
-            max-height: 300px;
-            overflow: auto;
-            font-size: 11px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                padding: 20px;
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-
-            .header-left {
-                flex-direction: column;
-            }
-
-            .header-right {
-                justify-content: center;
-            }
-
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .controls-left {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .controls-left input,
-            .controls-left select {
-                width: 100%;
-                min-width: unset;
-            }
-
-            .controls-left .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .table-footer {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-
-            .table-footer .actions {
-                justify-content: center;
-            }
-
-            tbody td {
-                padding: 10px 12px;
-                font-size: 13px;
-            }
-
-            thead th {
-                padding: 10px 12px;
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .header-left h1 {
-                font-size: 18px;
-            }
-
-            .stats {
-                font-size: 12px;
-                padding: 6px 14px;
-            }
-
-            .btn {
-                padding: 8px 16px;
-                font-size: 13px;
-            }
-
-            table {
-                font-size: 12px;
-                min-width: 600px;
-            }
-
-            tbody td,
-            thead th {
-                padding: 8px 10px;
-            }
-        }
-
-        /* Utility */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-10 {
-            margin-top: 10px;
-        }
-
-        .mb-10 {
-            margin-bottom: 10px;
-        }
-
-        .flex {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .gap-5 {
-            gap: 5px;
-        }
-
-        /* Loading spinner for button */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Scrollbar styling */
-        .table-scroll::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .table-scroll::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        .table-scroll::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
-        }
-
-        .table-scroll::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-    </style>
 </head>
+
 <body>
 
-<div class="container">
-    <!-- Header -->
-    <div class="header">
-        <div class="header-left">
-            <span class="logo">📋</span>
-            <div>
-                <h1>Volunteer Dashboard</h1>
-                <div class="subtitle">SBI Golden Jubilee Celebration · Barabati Stadium</div>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="stats">
-                👥 <span id="totalCount">0</span> registrations
-            </div>
-            <div class="stats">
-                🚗 <span id="vehicleCount">0</span> need transport
-            </div>
-            <button class="btn btn-outline btn-sm" onclick="toggleDebug()">🐛 Debug</button>
-        </div>
-    </div>
+<h2>Registration Dashboard</h2>
 
-    <!-- Controls -->
-    <div class="controls">
-        <div class="controls-left">
-            <input type="text" id="searchInput" placeholder="🔍 Search by name, PF, branch..." oninput="filterTable()" />
-            <select id="filterVehicle" onchange="filterTable()">
-                <option value="all">All (Vehicle)</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
-            <select id="filterStatus" onchange="filterTable()">
-                <option value="all">All Status</option>
-                <option value="Confirmed">Confirmed</option>
-                <option value="Pending">Pending</option>
-                <option value="Cancelled">Cancelled</option>
-            </select>
-        </div>
-        <div>
-            <button class="btn btn-primary" id="fetchBtn" onclick="fetchData()">
-                🔄 Refresh Data
-            </button>
-            <button class="btn btn-success" onclick="exportCSV()">📥 Export CSV</button>
-        </div>
-    </div>
+<button onclick="fetchData()" id="btn">
+Load Data
+</button>
 
-    <!-- Status Message -->
-    <div id="statusMessage" class="status-message"></div>
+<div id="status"></div>
 
-    <!-- Table -->
-    <div class="table-wrapper">
-        <div class="table-scroll">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>
-                            <button class="sort-btn" onclick="sortTable('Staff Name')">Staff Name ↕</button>
-                        </th>
-                        <th>
-                            <button class="sort-btn" onclick="sortTable('PF Number')">PF Number ↕</button>
-                        </th>
-                        <th>Branch</th>
-                        <th>Boarding Place</th>
-                        <th>Mobile</th>
-                        <th>Persons</th>
-                        <th>Vehicle</th>
-                        <th>Status</th>
-                        <th>Registered</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr>
-                        <td colspan="10">
-                            <div class="empty-state">
-                                <div class="icon">📊</div>
-                                <h3>No data loaded</h3>
-                                <p>Click "Refresh Data" to fetch registrations from Google Sheets</p>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="table-footer">
-            <div>
-                Showing <span class="count" id="shownCount">0</span> of <span id="totalCountFooter">0</span> registrations
-            </div>
-            <div class="actions">
-                <span id="lastUpdated" style="color:#999; font-size:13px;">Last updated: Never</span>
-            </div>
-        </div>
-    </div>
+<table id="table">
 
-    <!-- Debug Panel -->
-    <div id="debugPanel">
-        <h4>🔍 Debug Log</h4>
-        <div id="debugOutput">Debug mode enabled. Click "Refresh Data" to start.</div>
-    </div>
-</div>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>PF Number</th>
+<th>Branch</th>
+<th>Boarding Place</th>
+<th>Mobile</th>
+<th>Persons</th>
+</tr>
+</thead>
+
+<tbody>
+
+</tbody>
+
+</table>
+
+
 
 <script>
-    (function() {
-        'use strict';
 
-        // ============================================
-        // CONFIGURATION - UPDATE THESE VALUES
-        // ============================================
-        const CONFIG = {
-            // Your n8n webhook URL for fetching data
-            // This should be a GET endpoint in n8n that returns sheet data
-            fetchURL: 'https://mkn8n.app.n8n.cloud/webhook/33006e45-be6e-40b6-9dd7-f17187d46970',
-            
-            // Or if using a different endpoint:
-            // fetchURL: 'https://your-n8n-domain.com/webhook/your-webhook-id/fetch',
-            
-            debugMode: true,
-            timeout: 30000
-        };
 
-        // ============================================
-        // STATE
-        // ============================================
-        let allData = [];
-        let filteredData = [];
-        let sortColumn = '';
-        let sortDirection = 'asc';
+const CONFIG={
 
-        // ============================================
-        // DOM REFS
-        // ============================================
-        const tableBody = document.getElementById('tableBody');
-        const statusMessage = document.getElementById('statusMessage');
-        const searchInput = document.getElementById('searchInput');
-        const filterVehicle = document.getElementById('filterVehicle');
-        const filterStatus = document.getElementById('filterStatus');
-        const totalCount = document.getElementById('totalCount');
-        const vehicleCount = document.getElementById('vehicleCount');
-        const shownCount = document.getElementById('shownCount');
-        const totalCountFooter = document.getElementById('totalCountFooter');
-        const lastUpdated = document.getElementById('lastUpdated');
-        const fetchBtn = document.getElementById('fetchBtn');
-        const debugOutput = document.getElementById('debugOutput');
-        const debugPanel = document.getElementById('debugPanel');
 
-        // ============================================
-        // DEBUG LOGGING
-        // ============================================
-        function logDebug(message) {
-            if (CONFIG.debugMode && debugOutput) {
-                const timestamp = new Date().toLocaleTimeString();
-                debugOutput.textContent += `[${timestamp}] ${message}\n`;
-                debugOutput.scrollTop = debugOutput.scrollHeight;
-            }
-            console.log('[Volunteer]', message);
-        }
+fetchURL:
+"https://mkn8n.app.n8n.cloud/webhook-test/33006e45-be6e-40b6-9dd7-f17187d46970"
 
-        window.toggleDebug = function() {
-            debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
-            if (debugPanel.style.display === 'block') {
-                logDebug('Debug panel opened');
-            }
-        };
+};
 
-        // ============================================
-        // STATUS MESSAGES
-        // ============================================
-        function showStatus(type, message) {
-            statusMessage.className = 'status-message ' + type;
-            statusMessage.textContent = message;
-            statusMessage.style.display = 'block';
-            
-            if (type === 'success' || type === 'error' || type === 'info') {
-                setTimeout(() => {
-                    statusMessage.style.display = 'none';
-                }, 6000);
-            }
-        }
 
-        function hideStatus() {
-            statusMessage.style.display = 'none';
-        }
 
-        // ============================================
-        // FETCH DATA FROM N8N
-        // ============================================
-        async function fetchData() {
-            logDebug('🔄 Fetching data from: ' + CONFIG.fetchURL);
-            
-            fetchBtn.disabled = true;
-            fetchBtn.innerHTML = '<span class="spinner"></span> Loading...';
-            showStatus('loading', 'Fetching registration data...');
+async function fetchData(){
 
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout);
 
-                const response = await fetch(CONFIG.fetchURL, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                    signal: controller.signal
-                });
+const btn=document.getElementById("btn");
 
-                clearTimeout(timeoutId);
+const status=document.getElementById("status");
 
-                logDebug('📡 Response status: ' + response.status);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
+btn.disabled=true;
 
-                const responseText = await response.text();
-                logDebug('📨 Raw response: ' + responseText.substring(0, 500) + (responseText.length > 500 ? '...' : ''));
+status.innerHTML="Loading...";
 
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (e) {
-                    logDebug('❌ JSON parse error: ' + e.message);
-                    throw new Error('Invalid JSON response from server');
-                }
 
-                // Handle different response formats
-                let data = [];
-                if (Array.isArray(result)) {
-                    data = result;
-                } else if (result.data && Array.isArray(result.data)) {
-                    data = result.data;
-                } else if (result.rows && Array.isArray(result.rows)) {
-                    data = result.rows;
-                } else if (result.success && result.data && Array.isArray(result.data)) {
-                    data = result.data;
-                } else {
-                    logDebug('⚠️ Unexpected response format. Attempting to extract data...');
-                    // Try to find any array in the response
-                    for (const key in result) {
-                        if (Array.isArray(result[key]) && result[key].length > 0) {
-                            data = result[key];
-                            logDebug('✅ Found data in key: ' + key);
-                            break;
-                        }
-                    }
-                }
+try{
 
-                logDebug('📊 Parsed ' + data.length + ' records');
 
-                if (data.length === 0) {
-                    showStatus('info', 'ℹ️ No registration data found in the sheet.');
-                } else {
-                    showStatus('success', '✅ Loaded ' + data.length + ' registrations successfully!');
-                }
+const response = await fetch(
+CONFIG.fetchURL,
+{
+method:"GET",
+headers:{
+"Accept":"application/json"
+}
+});
 
-                allData = data;
-                applyFilters();
-                updateStats();
-                updateLastUpdated();
 
-                logDebug('✅ Data loaded successfully');
+if(!response.ok){
 
-            } catch (error) {
-                logDebug('❌ Error: ' + error.message);
-                
-                if (error.name === 'AbortError') {
-                    showStatus('error', '⏱️ Request timed out. Please check your connection.');
-                } else if (error.message.includes('Failed to fetch')) {
-                    showStatus('error', '🌐 Cannot connect to server. Check the webhook URL and network.');
-                    logDebug('🔍 Make sure the n8n webhook is accessible and returns JSON data.');
-                } else {
-                    showStatus('error', '❌ ' + error.message);
-                }
-                
-                // Show empty state
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="10">
-                            <div class="empty-state">
-                                <div class="icon">⚠️</div>
-                                <h3>Error loading data</h3>
-                                <p>${error.message}</p>
-                                <p style="font-size:13px; color:#999; margin-top:10px;">Check debug panel for details</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            } finally {
-                fetchBtn.disabled = false;
-                fetchBtn.innerHTML = '🔄 Refresh Data';
-            }
-        }
+throw new Error(
+"Server error "+response.status
+);
 
-        // ============================================
-        // FILTER & SORT
-        // ============================================
-        function applyFilters() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            const vehicleFilter = filterVehicle.value;
-            const statusFilter = filterStatus.value;
+}
 
-            filteredData = allData.filter(row => {
-                // Search filter
-                if (searchTerm) {
-                    const searchable = [
-                        row['Staff Name'] || '',
-                        row['PF Number'] || '',
-                        row['Branch'] || '',
-                        row['Boarding Place'] || '',
-                        row['Mobile Number'] || ''
-                    ].join(' ').toLowerCase();
-                    if (!searchable.includes(searchTerm)) return false;
-                }
 
-                // Vehicle filter
-                if (vehicleFilter !== 'all') {
-                    const vehicle = (row['Vehicle Required'] || '').toLowerCase();
-                    if (vehicle !== vehicleFilter) return false;
-                }
+const result = await response.json();
 
-                // Status filter
-                if (statusFilter !== 'all') {
-                    const status = (row['Status'] || '').toLowerCase();
-                    if (status !== statusFilter.toLowerCase()) return false;
-                }
 
-                return true;
-            });
+console.log("n8n response:",result);
 
-            // Apply sorting
-            if (sortColumn) {
-                filteredData.sort((a, b) => {
-                    const valA = (a[sortColumn] || '').toString().toLowerCase();
-                    const valB = (b[sortColumn] || '').toString().toLowerCase();
-                    if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-                    if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-                    return 0;
-                });
-            }
 
-            renderTable();
-            updateStats();
-        }
 
-        window.filterTable = function() {
-            applyFilters();
-            logDebug('🔍 Filters applied');
-        };
+let data=[];
 
-        window.sortTable = function(column) {
-            if (sortColumn === column) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortColumn = column;
-                sortDirection = 'asc';
-            }
-            logDebug(`📊 Sorting by ${column} (${sortDirection})`);
-            applyFilters();
-        };
 
-        // ============================================
-        // RENDER TABLE
-        // ============================================
-        function renderTable() {
-            if (filteredData.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="10">
-                            <div class="empty-state">
-                                <div class="icon">📭</div>
-                                <h3>No matching records</h3>
-                                <p>${allData.length > 0 ? 'Try adjusting your filters' : 'Click "Refresh Data" to load registrations'}</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                shownCount.textContent = '0';
-                return;
-            }
+// Your n8n format
 
-            let html = '';
-            filteredData.forEach((row, index) => {
-                const status = row['Status'] || 'Confirmed';
-                const vehicle = row['Vehicle Required'] || 'No';
-                const vehicleClass = vehicle.toLowerCase() === 'yes' ? 'yes' : 'no';
-                const statusClass = status.toLowerCase();
+if(result.data && Array.isArray(result.data)){
 
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><strong>${escapeHtml(row['Staff Name'] || '')}</strong></td>
-                        <td><code style="background:#f5f5f5; padding:2px 8px; border-radius:4px; font-size:13px;">${escapeHtml(row['PF Number'] || '')}</code></td>
-                        <td>${escapeHtml(row['Branch'] || '')}</td>
-                        <td>${escapeHtml(row['Boarding Place'] || '')}</td>
-                        <td>${escapeHtml(row['Mobile Number'] || '')}</td>
-                        <td style="text-align:center;">${row['Number of Persons'] || '1'}</td>
-                        <td><span class="vehicle-badge ${vehicleClass}">${vehicle}</span></td>
-                        <td><span class="status-badge ${statusClass}">${status}</span></td>
-                        <td style="font-size:12px; color:#999;">${formatDate(row['Registration Date'])}</td>
-                    </tr>
-                `;
-            });
+data=result.data;
 
-            tableBody.innerHTML = html;
-            shownCount.textContent = filteredData.length;
-        }
+}
 
-        // ============================================
-        // UPDATE STATS
-        // ============================================
-        function updateStats() {
-            totalCount.textContent = allData.length;
-            totalCountFooter.textContent = allData.length;
-            
-            const vehicles = allData.filter(row => 
-                (row['Vehicle Required'] || '').toLowerCase() === 'yes'
-            ).length;
-            vehicleCount.textContent = vehicles;
-        }
 
-        function updateLastUpdated() {
-            const now = new Date();
-            lastUpdated.textContent = 'Last updated: ' + now.toLocaleString();
-        }
 
-        // ============================================
-        // EXPORT CSV
-        // ============================================
-        window.exportCSV = function() {
-            if (filteredData.length === 0) {
-                showStatus('error', '❌ No data to export');
-                return;
-            }
+console.log(
+"Records:",
+data.length
+);
 
-            logDebug('📥 Exporting ' + filteredData.length + ' records to CSV');
 
-            const headers = [
-                'Registration ID',
-                'Staff Name',
-                'PF Number',
-                'Branch',
-                'Boarding Place',
-                'Mobile Number',
-                'Number of Persons',
-                'Vehicle Required',
-                'Remarks',
-                'Status',
-                'Registration Date'
-            ];
 
-            let csv = headers.join(',') + '\n';
+if(data.length===0){
 
-            filteredData.forEach(row => {
-                const values = headers.map(h => {
-                    let val = row[h] || '';
-                    // Escape quotes and wrap in quotes if contains comma
-                    if (typeof val === 'string') {
-                        val = val.replace(/"/g, '""');
-                        if (val.includes(',') || val.includes('"') || val.includes('\n')) {
-                            val = `"${val}"`;
-                        }
-                    }
-                    return val;
-                });
-                csv += values.join(',') + '\n';
-            });
+status.innerHTML=
+"No registration data found";
 
-            // Download
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `SBI_Registrations_${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(link.href);
+return;
 
-            showStatus('success', '✅ Exported ' + filteredData.length + ' records');
-            logDebug('✅ CSV exported successfully');
-        };
+}
 
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '—';
-            try {
-                const date = new Date(dateStr);
-                if (isNaN(date.getTime())) return dateStr.substring(0, 10);
-                return date.toLocaleDateString('en-IN', { 
-                    day: '2-digit', 
-                    month: 'short', 
-                    year: 'numeric' 
-                });
-            } catch (e) {
-                return dateStr.substring(0, 10) || '—';
-            }
-        }
 
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-        logDebug('✅ Volunteer Dashboard initialized');
-        logDebug('📍 Fetch URL: ' + CONFIG.fetchURL);
+displayTable(data);
 
-        // Show debug panel if enabled
-        if (CONFIG.debugMode) {
-            debugPanel.style.display = 'block';
-            logDebug('🔍 Debug mode enabled');
-        }
 
-        // Auto-fetch on load
-        setTimeout(() => {
-            logDebug('🔄 Auto-fetching data on load...');
-            fetchData();
-        }, 500);
 
-        // Expose for debugging
-        window.VolunteerApp = {
-            config: CONFIG,
-            data: () => allData,
-            filtered: () => filteredData,
-            fetch: fetchData,
-            logDebug: logDebug,
-            refresh: fetchData
-        };
+status.innerHTML=
+"Loaded "+data.length+" registrations";
 
-        console.log('💡 Volunteer Dashboard ready');
-        console.log('💡 Commands: VolunteerApp.fetch(), VolunteerApp.data(), VolunteerApp.filtered()');
 
-    })();
+}
+catch(error){
+
+console.error(error);
+
+status.innerHTML=
+"Error loading data";
+
+}
+
+
+finally{
+
+btn.disabled=false;
+
+}
+
+
+
+}
+
+
+
+
+
+function displayTable(data){
+
+
+const tbody=
+document.querySelector("#table tbody");
+
+
+tbody.innerHTML="";
+
+
+data.forEach(row=>{
+
+
+const tr=document.createElement("tr");
+
+
+tr.innerHTML=`
+
+<td>${row["Registration ID"] || ""}</td>
+
+<td>${row["Staff Name"] || ""}</td>
+
+<td>${row["PF Number"] || ""}</td>
+
+<td>${row["Branch"] || ""}</td>
+
+<td>${row["Boarding Place"] || ""}</td>
+
+<td>${row["Mobile Number"] || ""}</td>
+
+<td>${row["Number of Persons"] || ""}</td>
+
+`;
+
+tbody.appendChild(tr);
+
+
+});
+
+
+}
+
+
 </script>
+
 
 </body>
 </html>
