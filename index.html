@@ -1,237 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Registration Dashboard</title>
-
-<style>
-body{
-    font-family: Arial;
-    margin:20px;
-}
-
-button{
-    padding:10px 20px;
-    cursor:pointer;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-th,td{
-    border:1px solid #ccc;
-    padding:8px;
-}
-
-th{
-    background:#eee;
-}
-
-#status{
-    margin-top:15px;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Name & Age Fetcher</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; }
+    table { border-collapse: collapse; width: 320px; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f5f5f5; }
+    button { padding: 8px 16px; cursor: pointer; }
+    .error { color: #d00; margin-top: 0.5rem; }
+  </style>
 </head>
-
 <body>
-
-<h2>Registration Dashboard</h2>
-
-<button onclick="fetchData()" id="btn">
-Load Data
-</button>
-
-<div id="status"></div>
-
-<table id="table">
-
-<thead>
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>PF Number</th>
-<th>Branch</th>
-<th>Boarding Place</th>
-<th>Mobile</th>
-<th>Persons</th>
-</tr>
-</thead>
-
-<tbody>
-
-</tbody>
-
-</table>
-
-
-
-<script>
-
-
-const CONFIG={
-
-
-fetchURL:
-"https://mkn8n.app.n8n.cloud/webhook-test/33006e45-be6e-40b6-9dd7-f17187d46970"
-
-};
-
-
-
-async function fetchData(){
-
-
-const btn=document.getElementById("btn");
-
-const status=document.getElementById("status");
-
-
-btn.disabled=true;
-
-status.innerHTML="Loading...";
-
-
-try{
-
-
-const response = await fetch(
-CONFIG.fetchURL,
-{
-method:"GET",
-headers:{
-"Accept":"application/json"
-}
-});
-
-
-if(!response.ok){
-
-throw new Error(
-"Server error "+response.status
-);
-
-}
-
-
-const result = await response.json();
-
-
-console.log("n8n response:",result);
-
-
-
-let data=[];
-
-
-// Your n8n format
-
-if(result.data && Array.isArray(result.data)){
-
-data=result.data;
-
-}
-
-
-
-console.log(
-"Records:",
-data.length
-);
-
-
-
-if(data.length===0){
-
-status.innerHTML=
-"No registration data found";
-
-return;
-
-}
-
-
-
-displayTable(data);
-
-
-
-status.innerHTML=
-"Loaded "+data.length+" registrations";
-
-
-}
-catch(error){
-
-console.error(error);
-
-status.innerHTML=
-"Error loading data";
-
-}
-
-
-finally{
-
-btn.disabled=false;
-
-}
-
-
-
-}
-
-
-
-
-
-function displayTable(data){
-
-
-const tbody=
-document.querySelector("#table tbody");
-
-
-tbody.innerHTML="";
-
-
-data.forEach(row=>{
-
-
-const tr=document.createElement("tr");
-
-
-tr.innerHTML=`
-
-<td>${row["Registration ID"] || ""}</td>
-
-<td>${row["Staff Name"] || ""}</td>
-
-<td>${row["PF Number"] || ""}</td>
-
-<td>${row["Branch"] || ""}</td>
-
-<td>${row["Boarding Place"] || ""}</td>
-
-<td>${row["Mobile Number"] || ""}</td>
-
-<td>${row["Number of Persons"] || ""}</td>
-
-`;
-
-tbody.appendChild(tr);
-
-
-});
-
-
-}
-
-
-</script>
-
-
+  <h2>People Data</h2>
+  <button id="fetchBtn">Fetch Data</button>
+  <div id="status"></div>
+  <table id="dataTable">
+    <thead>
+      <tr><th>Name</th><th>Age</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // ⚠️ Replace with the actual webhook URL from your n8n workflow
+    const WEBHOOK_URL = 'https://mkn8n.app.n8n.cloud/webhook-test/33006e45-be6e-40b6-9dd7-f17187d46970';
+
+    document.getElementById('fetchBtn').addEventListener('click', async () => {
+      const status = document.getElementById('status');
+      const tbody = document.querySelector('#dataTable tbody');
+
+      status.textContent = 'Loading…';
+      status.className = '';
+      tbody.innerHTML = '';
+
+      try {
+        const response = await fetch(WEBHOOK_URL);
+        if (!response.ok) throw new Error(`Server error (${response.status})`);
+
+        const data = await response.json();
+
+        // Expected format: array of objects with "Name" and "Age"
+        // Example: [{"Name":"Alice","Age":30}, {"Name":"Bob","Age":25}]
+        if (!Array.isArray(data)) throw new Error('Response is not an array');
+
+        data.forEach(item => {
+          const row = tbody.insertRow();
+          row.insertCell().textContent = item.Name ?? '';
+          row.insertCell().textContent = item.Age ?? '';
+        });
+
+        status.textContent = `✅ Loaded ${data.length} record(s).`;
+      } catch (error) {
+        status.textContent = `❌ Error: ${error.message}`;
+        status.className = 'error';
+      }
+    });
+  </script>
 </body>
 </html>
